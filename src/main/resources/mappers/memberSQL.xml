@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.mybatis.myservice.dao.MemberDAO">
+    <select id="selectAllMembers"
+            resultType="MemberVO">
+        SELECT 	ID
+             , NAME
+             , JOB
+        FROM MEMBERS
+    </select>
+    
+    <select id="selectById" parameterType="int" resultType="MemberVO">
+        SELECT *
+        FROM MEMBERS
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="MemberVO">
+        INSERT INTO MEMBERS (ID, NAME, JOB)
+        VALUES (id_seq.nextval, #{name}, #{job})
+    </insert>
+
+    <update id="update" parameterType="MemberVO">
+        UPDATE MEMBERS
+        SET name = #{name},
+            job = #{job}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM MEMBERS
+        WHERE id = #{id}
+    </delete>
+</mapper>
