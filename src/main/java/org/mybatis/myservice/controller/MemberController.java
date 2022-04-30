@@ -23,9 +23,30 @@ public class MemberController {
         return mav;
     }
 
+    @GetMapping("/member/form")
+    public ModelAndView insertForm() {
+        ModelAndView mav = new ModelAndView("insert");
+        return mav;
+    }
+
+    @GetMapping("/member/form/{id}")
+    public ModelAndView editForm(@PathVariable int id) {
+        ModelAndView mav = new ModelAndView("edit");
+        MemberVO member = memberService.selectById(id);
+        mav.addObject("member", member);
+
+        return mav;
+    }
+
     @GetMapping("/member/{id}")
-    public MemberVO selectById(@PathVariable int id) {
-        return memberService.selectById(id);
+    public ModelAndView selectById(@PathVariable int id) {
+        ModelAndView mav = new ModelAndView("view");
+        MemberVO member = memberService.selectById(id);
+        mav.addObject("member", member);
+
+        System.out.println("member = " + member);
+
+        return mav;
     }
 
     @PostMapping("/member/new")
@@ -41,9 +62,10 @@ public class MemberController {
         return memberService.selectAllMembers();
     }
 
-    @DeleteMapping("/member/{id}")
-    public List<MemberVO> deleteMember(@PathVariable int id) {
-        memberService.deleteMember(id);
+    @DeleteMapping("/member")
+    public List<MemberVO> deleteMember(MemberVO member) {
+        System.out.println(member);
+//        memberService.deleteMember(member.getId());
         return memberService.selectAllMembers();
     }
 }

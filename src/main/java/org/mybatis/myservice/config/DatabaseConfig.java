@@ -20,10 +20,7 @@ public class DatabaseConfig {
         sqlSessionFactory.setMapperLocations(
                 new PathMatchingResourcePatternResolver()
                         .getResources("classpath:mappers/*.xml"));
-        sqlSessionFactory.setConfigLocation(
-                new PathMatchingResourcePatternResolver()
-                        .getResource("classpath:config/*.xml")
-        );
+
         return (SqlSessionFactory) sqlSessionFactory.getObject();
     }
 
