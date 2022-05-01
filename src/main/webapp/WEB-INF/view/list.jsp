@@ -40,8 +40,7 @@
                                 <a href="/member/form/${member.id}">수정</a>
                             </td>
                             <td>
-                                <input type="hidden" name="id" value="${member.id}">
-                                <input type="submit" name="deleteSub${member.id}" value="삭제">
+                                <input type="button" onclick="deleteMember(${member.id})" value="삭제">
                             </td>
                         </tr>
                     </c:forEach>
@@ -49,8 +48,34 @@
             </tbody>
         </table>
     </form>
+    <div id="deleteForm">
+
+    </div>
     <div>
         <a href="/member/form"><input type="button" id="button_add" name="button_add" value="등록"></a>
     </div>
+
+    <script type="text/javascript">
+        function deleteMember(memberId) {
+            var xmlHttp = new XMLHttpRequest();
+            var member = {
+                id : memberId
+            };
+            var parseMember = JSON.stringify(member);
+
+            var inputJson = document.getElementById("deleteForm");
+
+            xmlHttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    inputJson.innerHTML = "<h1>hi</h1>"
+                }
+            }
+
+            xmlHttp.open('DELETE', '${pageContext.request.contextPath}/member');
+            xmlHttp.responseType='json';
+            xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xmlHttp.send(parseMember);
+        }
+    </script>
 </body>
 </html>

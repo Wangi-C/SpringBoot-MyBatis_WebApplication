@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -63,7 +64,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/member")
-    public List<MemberVO> deleteMember(MemberVO member) {
+    public List<MemberVO> deleteMember(@RequestBody MemberVO member) {
         System.out.println(member);
 //        memberService.deleteMember(member.getId());
         return memberService.selectAllMembers();
