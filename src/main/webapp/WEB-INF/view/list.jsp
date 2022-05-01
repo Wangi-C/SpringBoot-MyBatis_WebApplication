@@ -20,42 +20,47 @@
                     <th>삭제</th>
                 </tr>
             </thead>
-            <tbody>
-                <c:if test="${!empty list}">
-                    <c:forEach items="${list}" var="member" varStatus="status">
-                        <tr>
-                            <td>
-                                <c:out value="${member.id}"/>
-                            </td>
-                            <td>
-                                <c:out value="${member.name}"/>
-                            </td>
-                            <td>
-                                <c:out value="${member.job}"/>
-                            </td>
-                            <td>
-                                <a href="/member/${member.id}">보기</a>
-                            </td>
-                            <td>
-                                <a href="/member/form/${member.id}">수정</a>
-                            </td>
-                            <td>
-                                <input type="button" onclick="deleteMember(${member.id})" value="삭제">
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </c:if>
-            </tbody>
+            <tbody id="memberRow"></tbody>
         </table>
     </form>
-    <div id="deleteForm">
-
-    </div>
     <div>
         <a href="/member/form"><input type="button" id="button_add" name="button_add" value="등록"></a>
     </div>
 
     <script type="text/javascript">
+        searchList();
+
+        function searchList() {
+            var xmlHttp = new XMLHttpRequest();
+            var inputJson = document.getElementById("memberRow");
+
+            xmlHttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var showData = xmlHttp.response;
+
+                    var script = "";
+
+                    for (var i = 0; i < showData.length; i++) {
+                        script += "<tr>";
+                        script += "    <td>" + showData[i].id + "</td>";
+                        script += "    <td>" + showData[i].name +"</td>";
+                        script += "    <td>" + showData[i].job + "</td>";
+                        script += "    <td><a href=\"/member/" + showData[i].id + "\">보기</a></td>";
+                        script += "    <td><a href=\"/member/form/" + showData[i].name +"\">수정</a></td>";
+                        script += "    <td><input type=\"button\" onclick=\"deleteMember(" + showData[i].id + ")\" value=\"삭제\"></td>";
+                        script += "</tr>";
+                    }
+
+                    inputJson.innerHTML = script;
+                }
+            }
+
+            xmlHttp.open('POST', '${pageContext.request.contextPath}/members');
+            xmlHttp.responseType = 'json';
+            xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xmlHttp.send();
+        }
+
         function deleteMember(memberId) {
             var xmlHttp = new XMLHttpRequest();
             var member = {
@@ -63,11 +68,26 @@
             };
             var parseMember = JSON.stringify(member);
 
-            var inputJson = document.getElementById("deleteForm");
+            var inputJson = document.getElementById("memberRow");
 
             xmlHttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    inputJson.innerHTML = "<h1>hi</h1>"
+                    var showData = xmlHttp.response;
+
+                    var script = "";
+
+                    for (var i = 0; i < showData.length; i++) {
+                        script += "<tr>";
+                        script += "    <td>" + showData[i].id + "</td>";
+                        script += "    <td>" + showData[i].name +"</td>";
+                        script += "    <td>" + showData[i].job + "</td>";
+                        script += "    <td><a href=\"/member/" + showData[i].id + "\">보기</a></td>";
+                        script += "    <td><a href=\"/member/form/" + showData[i].name +"\">수정</a></td>";
+                        script += "    <td><input type=\"button\" onclick=\"deleteMember(" + showData[i].id + ")\" value=\"삭제\"></td>";
+                        script += "</tr>";
+                    }
+
+                    inputJson.innerHTML = script;
                 }
             }
 

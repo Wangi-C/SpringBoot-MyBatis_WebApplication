@@ -17,11 +17,12 @@ public class MemberController {
 
     @GetMapping("/members")
     public ModelAndView selectListMember() {
-        ModelAndView mav = new ModelAndView("list");
-        List<MemberVO> allMembers = memberService.selectAllMembers();
-        mav.addObject("list", allMembers);
+        return new ModelAndView("list");
+    }
 
-        return mav;
+    @PostMapping("/members")
+    public List<MemberVO> selectMembers() {
+        return memberService.selectAllMembers();
     }
 
     @GetMapping("/member/form")
@@ -66,7 +67,7 @@ public class MemberController {
     @DeleteMapping("/member")
     public List<MemberVO> deleteMember(@RequestBody MemberVO member) {
         System.out.println(member);
-//        memberService.deleteMember(member.getId());
+        memberService.deleteMember(member.getId());
         return memberService.selectAllMembers();
     }
 }
