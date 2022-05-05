@@ -20,7 +20,8 @@
                     <th>삭제</th>
                 </tr>
             </thead>
-            <tbody id="memberRow"></tbody>
+            <tbody id="memberRow">
+            </tbody>
         </table>
     </form>
     <div>
@@ -45,9 +46,10 @@
                         script += "    <td>" + showData[i].id + "</td>";
                         script += "    <td>" + showData[i].name +"</td>";
                         script += "    <td>" + showData[i].job + "</td>";
-                        script += "    <td><a href=\"/member/" + showData[i].id + "\">보기</a></td>";
+                        script += "    <td><input type=\"button\" onclick=\"viewMember(" + showData[i].id + ")\" value=\"보기\"></td>";
                         script += "    <td><a href=\"/member/form/" + showData[i].name +"\">수정</a></td>";
                         script += "    <td><input type=\"button\" onclick=\"deleteMember(" + showData[i].id + ")\" value=\"삭제\"></td>";
+                        script += "    <tr id=\"viewMemberRow" + showData[i].id + "\"></tr>";
                         script += "</tr>";
                     }
 
@@ -81,9 +83,10 @@
                         script += "    <td>" + showData[i].id + "</td>";
                         script += "    <td>" + showData[i].name +"</td>";
                         script += "    <td>" + showData[i].job + "</td>";
-                        script += "    <td><a href=\"/member/" + showData[i].id + "\">보기</a></td>";
+                        script += "    <td><input type=\"button\" onclick=\"viewMember(" + showData[i].id + ")\" value=\"보기\"></td>";
                         script += "    <td><a href=\"/member/form/" + showData[i].name +"\">수정</a></td>";
                         script += "    <td><input type=\"button\" onclick=\"deleteMember(" + showData[i].id + ")\" value=\"삭제\"></td>";
+                        script += "    <tr id=\"viewMemberRow" + showData[i].id + "\"></tr>";
                         script += "</tr>";
                     }
 
@@ -95,6 +98,50 @@
             xmlHttp.responseType='json';
             xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             xmlHttp.send(parseMember);
+        }
+
+        function viewMember(memberId) {
+            var xmlHttp = new XMLHttpRequest();
+            var member = {
+                id : memberId
+            };
+            var inputJson = document.getElementById("viewMemberRow"+memberId);
+            var script = "";
+
+            xmlHttp.onreadystatechange = function () {
+                if (this.readyState = 4 && this.status == 200) {
+                    var viewMember = xmlHttp.response;
+
+                    console.log(viewMember);
+                    script += "        <td colspan=\"2\">" + viewMember.name + "</td>";
+                    script += "        <td colspan=\"4\">" + viewMember.job + "</td>";
+
+                    inputJson.innerHTML = script;
+                }
+            }
+
+            xmlHttp.open('POST', '${pageContext.request.contextPath}/member');
+            xmlHttp.responseType = 'json';
+            xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xmlHttp.send(JSON.stringify(member));
+
+            <%--$.ajax({--%>
+            <%--    url: "${pageContext.request.contextPath}/member"--%>
+            <%--    , type: "POST"--%>
+            <%--    , data: JSON.stringify(member)--%>
+            <%--    , headers: {--%>
+            <%--        "Content-Type" : "application/json;charset=UTF-8"--%>
+            <%--        , success: function (row) {--%>
+            <%--            console.log(row)--%>
+            <%--            script += "    <tr>";--%>
+            <%--            script += "        <td colspan=\"2\">" + row.name + "</td>";--%>
+            <%--            script += "        <td colspan=\"4\">" + row.job + "</td>";--%>
+            <%--            script += "    </tr>";--%>
+
+            <%--            inputJson.innerHTML = script;--%>
+            <%--        }--%>
+            <%--    }--%>
+            <%--});--%>
         }
     </script>
 </body>

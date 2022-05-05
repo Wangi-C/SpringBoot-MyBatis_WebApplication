@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Member;
 import java.util.List;
 
 @RestController
@@ -46,9 +47,12 @@ public class MemberController {
         MemberVO member = memberService.selectById(id);
         mav.addObject("member", member);
 
-        System.out.println("member = " + member);
-
         return mav;
+    }
+
+    @PostMapping("/member")
+    public MemberVO selectById(@RequestBody MemberVO member) {
+        return memberService.selectById(member.getId());
     }
 
     @PostMapping("/member/new")
@@ -66,7 +70,6 @@ public class MemberController {
 
     @DeleteMapping("/member")
     public List<MemberVO> deleteMember(@RequestBody MemberVO member) {
-        System.out.println(member);
         memberService.deleteMember(member.getId());
         return memberService.selectAllMembers();
     }
