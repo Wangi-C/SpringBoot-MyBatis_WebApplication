@@ -28,7 +28,8 @@
         <a href="/member/form"><input type="button" id="button_add" name="button_add" value="등록"></a>
     </div>
 
-    <script type="text/javascript">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" >
         searchList();
 
         function searchList() {
@@ -101,47 +102,44 @@
         }
 
         function viewMember(memberId) {
-            var xmlHttp = new XMLHttpRequest();
+            // var xmlHttp = new XMLHttpRequest();
             var member = {
                 id : memberId
             };
+
             var inputJson = document.getElementById("viewMemberRow"+memberId);
             var script = "";
 
-            xmlHttp.onreadystatechange = function () {
-                if (this.readyState = 4 && this.status == 200) {
-                    var viewMember = xmlHttp.response;
+            <%--xmlHttp.onreadystatechange = function () {--%>
+            <%--    if (this.readyState = 4 && this.status == 200) {--%>
+            <%--        var viewMember = xmlHttp.response;--%>
 
-                    console.log(viewMember);
-                    script += "        <td colspan=\"2\">" + viewMember.name + "</td>";
-                    script += "        <td colspan=\"4\">" + viewMember.job + "</td>";
+            <%--        console.log(viewMember);--%>
+            //         script += "        <td colspan=\"2\">" + viewMember.name + "</td>";
+            //         script += "        <td colspan=\"4\">" + viewMember.job + "</td>";
+
+            <%--        inputJson.innerHTML = script;--%>
+            <%--    }--%>
+            <%--}--%>
+
+            <%--xmlHttp.open('POST', '${pageContext.request.contextPath}/member');--%>
+            <%--xmlHttp.responseType = 'json';--%>
+            <%--xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");--%>
+            <%--xmlHttp.send(JSON.stringify(member));--%>
+
+            $.ajax({
+                url: "${pageContext.request.contextPath}/member"
+                , type: "POST"
+                , data: JSON.stringify(member)
+                , headers: {"Content-Type" : "application/json;charset=UTF-8"}
+                , success: function (row) {
+                    console.log(row)
+                    script += "        <td colspan=\"2\">" + row.name + "</td>";
+                    script += "        <td colspan=\"4\">" + row.job + "</td>";
 
                     inputJson.innerHTML = script;
                 }
-            }
-
-            xmlHttp.open('POST', '${pageContext.request.contextPath}/member');
-            xmlHttp.responseType = 'json';
-            xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            xmlHttp.send(JSON.stringify(member));
-
-            <%--$.ajax({--%>
-            <%--    url: "${pageContext.request.contextPath}/member"--%>
-            <%--    , type: "POST"--%>
-            <%--    , data: JSON.stringify(member)--%>
-            <%--    , headers: {--%>
-            <%--        "Content-Type" : "application/json;charset=UTF-8"--%>
-            <%--        , success: function (row) {--%>
-            <%--            console.log(row)--%>
-            <%--            script += "    <tr>";--%>
-            <%--            script += "        <td colspan=\"2\">" + row.name + "</td>";--%>
-            <%--            script += "        <td colspan=\"4\">" + row.job + "</td>";--%>
-            <%--            script += "    </tr>";--%>
-
-            <%--            inputJson.innerHTML = script;--%>
-            <%--        }--%>
-            <%--    }--%>
-            <%--});--%>
+            });
         }
     </script>
 </body>
