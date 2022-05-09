@@ -56,7 +56,15 @@ public class MemberController {
     }
 
     @PostMapping("/member/new")
-    public List<MemberVO> insertMember(@RequestBody MemberVO memberVO) {
+    public List<MemberVO> insertMember(@RequestParam(value = "") MemberVO memberVO) {
+//        String memberName = request.getParameter("name");
+//        String memberJob = request.getParameter("job");
+//        MemberVO memberVO = new MemberVO();
+//        memberVO.setName(memberName);
+//        memberVO.setJob(memberJob);
+
+        System.out.println("memberVO = " + memberVO);
+
         memberService.insertMember(memberVO);
         return memberService.selectAllMembers();
     }
