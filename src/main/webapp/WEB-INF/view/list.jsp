@@ -47,7 +47,7 @@
                         script += "    <td>" + showData[i].id + "</td>";
                         script += "    <td>" + showData[i].name +"</td>";
                         script += "    <td>" + showData[i].job + "</td>";
-                        script += "    <td><input type=\"button\" onclick=\"viewMember(" + showData[i].id + ")\" value=\"보기\"></td>";
+                        script += "    <td id=\"viewButton" + showData[i].id + "\"><input type=\"button\" onclick=\"viewMember(" + showData[i].id + ")\" value=\"보기\"></td>";
                         script += "    <td><a href=\"/member/form/" + showData[i].name +"\">수정</a></td>";
                         script += "    <td><input type=\"button\" onclick=\"deleteMember(" + showData[i].id + ")\" value=\"삭제\"></td>";
                         script += "    <tr id=\"viewMemberRow" + showData[i].id + "\"></tr>";
@@ -84,7 +84,7 @@
                         script += "    <td>" + showData[i].id + "</td>";
                         script += "    <td>" + showData[i].name +"</td>";
                         script += "    <td>" + showData[i].job + "</td>";
-                        script += "    <td><input type=\"button\" onclick=\"viewMember(" + showData[i].id + ")\" value=\"보기\"></td>";
+                        script += "    <td id=\"viewButton" + showData[i].id + "\"><input type=\"button\" onclick=\"viewMember(" + showData[i].id + ")\" value=\"보기\"></td>";
                         script += "    <td><a href=\"/member/form/" + showData[i].name +"\">수정</a></td>";
                         script += "    <td><input type=\"button\" onclick=\"deleteMember(" + showData[i].id + ")\" value=\"삭제\"></td>";
                         script += "    <tr id=\"viewMemberRow" + showData[i].id + "\"></tr>";
@@ -102,30 +102,13 @@
         }
 
         function viewMember(memberId) {
-            // var xmlHttp = new XMLHttpRequest();
             var member = {
                 id : memberId
             };
 
             var inputJson = document.getElementById("viewMemberRow"+memberId);
+            var viewButton = document.getElementById("viewButton"+memberId);
             var script = "";
-
-            <%--xmlHttp.onreadystatechange = function () {--%>
-            <%--    if (this.readyState = 4 && this.status == 200) {--%>
-            <%--        var viewMember = xmlHttp.response;--%>
-
-            <%--        console.log(viewMember);--%>
-            //         script += "        <td colspan=\"2\">" + viewMember.name + "</td>";
-            //         script += "        <td colspan=\"4\">" + viewMember.job + "</td>";
-
-            <%--        inputJson.innerHTML = script;--%>
-            <%--    }--%>
-            <%--}--%>
-
-            <%--xmlHttp.open('POST', '${pageContext.request.contextPath}/member');--%>
-            <%--xmlHttp.responseType = 'json';--%>
-            <%--xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");--%>
-            <%--xmlHttp.send(JSON.stringify(member));--%>
 
             $.ajax({
                 url: "${pageContext.request.contextPath}/member"
@@ -138,8 +121,16 @@
                     script += "        <td colspan=\"4\">" + row.job + "</td>";
 
                     inputJson.innerHTML = script;
+                    viewButton.innerHTML = "<input type=\"button\" onclick=\"closeViewMember(" + row.id +")\" value=\"닫기\">";
                 }
             });
+        }
+
+        function closeViewMember(memberId) {
+            var inputJson = document.getElementById("viewMemberRow"+memberId);
+            var viewButton = document.getElementById("viewButton"+memberId);
+            inputJson.innerHTML = "";
+            viewButton.innerHTML = "<input type=\"button\" onclick=\"viewMember(" + memberId + ")\" value=\"보기\">"
         }
     </script>
 </body>
