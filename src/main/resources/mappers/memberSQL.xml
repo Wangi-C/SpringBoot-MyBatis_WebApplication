@@ -10,12 +10,19 @@
              , NAME
              , JOB
         FROM MEMBERS
+        ORDER BY ID
     </select>
     
     <select id="selectById" parameterType="int" resultType="MemberVO">
         SELECT *
         FROM MEMBERS
         WHERE id = #{id}
+    </select>
+
+    <select id="selectByName" parameterType="String" resultType="MemberVO">
+        SELECT *
+        FROM MEMBERS
+        WHERE name = #{name}
     </select>
 
     <insert id="insert" parameterType="MemberVO">

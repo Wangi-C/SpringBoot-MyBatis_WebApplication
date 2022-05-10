@@ -1,12 +1,16 @@
 package org.mybatis.myservice.controller;
 
+import org.apache.ibatis.javassist.bytecode.DuplicateMemberException;
 import org.mybatis.myservice.model.MemberVO;
 import org.mybatis.myservice.service.MemberService;
+import org.mybatis.myservice.validation.InsertMemberValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.lang.reflect.Member;
 import java.util.List;
 
@@ -15,6 +19,31 @@ public class MemberController {
 
     @Autowired
     private MemberService memberService;
+
+    @GetMapping("/login/form")
+    public ModelAndView loginForm() {
+        return new ModelAndView("login");
+    }
+
+    @PostMapping("/logInOut")
+    public ModelAndView loginMember(MemberVO member, HttpSession session) {
+        ModelAndView mav = new ModelAndView();
+
+        if (memberService.selectByName(member.getName()) != null) {
+            session.setAttribute("memberName", member.getName());
+            mav.setViewName("redirect:/members");
+        } else {
+            mav.setViewName("redirect:/login/form");
+        }
+
+        return mav;
+    }
+
+    @GetMapping("/logInOut")
+    public ModelAndView logoutMember(HttpSession session) {
+        session.invalidate();
+        return new ModelAndView("redirect:/login/form");
+    }
 
     @GetMapping("/members")
     public ModelAndView selectListMember() {
@@ -56,17 +85,29 @@ public class MemberController {
     }
 
     @PostMapping("/member/new")
-    public List<MemberVO> insertMember(@RequestParam(value = "") MemberVO memberVO) {
-//        String memberName = request.getParameter("name");
-//        String memberJob = request.getParameter("job");
-//        MemberVO memberVO = new MemberVO();
-//        memberVO.setName(memberName);
-//        memberVO.setJob(memberJob);
-
+    public ModelAndView insertMember(MemberVO memberVO, Errors errors) {
+        new InsertMemberValidator().validate(memberVO, errors);
+        ModelAndView mav = new ModelAndView();
         System.out.println("memberVO = " + memberVO);
 
-        memberService.insertMember(memberVO);
-        return memberService.selectAllMembers();
+        if (errors.hasErrors()) {
+            mav.addObject("errorMsg", "입력된 값이 없습니다.");
+            mav.setViewName("redirect:/member/form");
+
+            return mav;
+        }
+
+        try {
+            memberService.insertMember(memberVO);
+            mav.setViewName("redirect:/members");
+
+            memberService.insertMember(memberVO);
+        } catch (Exception e) {
+            mav.addObject("errorMsg", "등록 실패");
+            mav.setViewName("redirect:/member/form");
+        }
+
+        return mav;
     }
 
     @PutMapping("/member/{id}")

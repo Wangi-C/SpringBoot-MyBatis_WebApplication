@@ -16,4 +16,6 @@ public interface MemberDAO {
     void delete(int id);
 
     void update(MemberVO member);
+
+    MemberVO selectByName(String name);
 }

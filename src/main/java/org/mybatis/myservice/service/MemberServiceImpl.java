@@ -47,4 +47,9 @@ public class MemberServiceImpl implements MemberService {
     public MemberVO selectById(int id) {
         return memberDAO.selectById(id);
     }
+
+    @Override
+    public MemberVO selectByName(String name) {
+        return memberDAO.selectByName(name);
+    }
 }

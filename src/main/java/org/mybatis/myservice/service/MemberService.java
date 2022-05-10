@@ -16,4 +16,6 @@ public interface MemberService {
     void deleteMember(int id);
 
     MemberVO selectById(int id);
+
+    MemberVO selectByName(String name);
 }
